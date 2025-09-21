@@ -170,11 +170,6 @@ function MiscellaneousPane() {
     misc_always_show_search_caret: null,
     misc_hide_search_icon: null,
     misc_hide_search_bar_if_no_text: null,
-    misc_prevent_address_bar_focus: () => {
-      chrome.storage.local.set({
-        highlight: getBoolLS("misc_prevent_address_bar_focus"),
-      });
-    },
   };
 
   return (

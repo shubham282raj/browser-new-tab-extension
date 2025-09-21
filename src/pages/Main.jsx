@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Search from "../components/Search";
 import Settings, { SettingsPane } from "../components/Settings";
 import { cacheImage, getCachedImage } from "../utils/indexedDB";
+import { getBoolLS } from "../utils/utils";
 
 export default function Main() {
   const [toggleSettings, setToggle] = useState(false);
