@@ -8,9 +8,9 @@ import { toggleLSKey } from "../utils/utils";
 export function SettingsPane({ onClose }) {
   const subpanes = {
     Favorites: FavoriteSettingPane,
+    "Search Engine": SearchEnginePane,
     Background: "hi",
-    Misc: Miscellaneous,
-    // "Search Engine": "hi",
+    Misc: MiscellaneousPane,
   };
 
   const [selected, setSelected] = useState("Favorites");
@@ -133,7 +133,32 @@ function FavoriteSettingPane() {
   );
 }
 
-function Miscellaneous() {
+function SearchEnginePane() {
+  return (
+    <div>
+      <div className="flex gap-2">
+        <div className="text-md outline-0 px-4 py-2 rounded-lg">
+          Defaut Page
+        </div>
+        <input
+          type="text"
+          required
+          onChange={(e) => {
+            localStorage.setItem("defaultSearch", e.target.value);
+          }}
+          autoFocus
+          defaultValue={localStorage.getItem("defaultSearch")}
+          placeholder="URL (This would open if you press Enter with no text)"
+          className="grow-1 text-md outline-0 bg-white/5 px-4 py-2 rounded-lg"
+        />
+      </div>
+
+      <div></div>
+    </div>
+  );
+}
+
+function MiscellaneousPane() {
   const settings = {
     misc_hide_clock: null,
     misc_hide_date: null,

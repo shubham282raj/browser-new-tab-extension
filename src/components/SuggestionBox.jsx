@@ -65,7 +65,12 @@ export default function SuggestionBox({ searchText }) {
           prev <= 0 ? allSuggestions.length - 1 : prev - 1
         );
       } else if (e.key === "Enter" && focusedIndex >= 0) {
-        window.location.href = allSuggestions[focusedIndex].url;
+        if (searchText) window.location.href = allSuggestions[focusedIndex].url;
+        else if (localStorage.getItem("defaultSearch")) {
+          window.location.href = getGoToUrl(
+            localStorage.getItem("defaultSearch")
+          );
+        }
       }
     }
 
