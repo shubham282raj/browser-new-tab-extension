@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { simplifyUrl } from "./SuggestionBox";
 import { addFavorite, deleteFavorite, getFavs } from "../utils/Favorites";
+import { formatLSValue } from "../utils/formatter";
+import ToggleBtn, { ToggleLSBtn } from "./ToggleBtn";
+import { toggleLSKey } from "../utils/utils";
 
 export function SettingsPane({ onClose }) {
   const subpanes = {
     Favorites: FavoriteSettingPane,
     Background: "hi",
+    Misc: Miscellaneous,
     // "Search Engine": "hi",
   };
 
@@ -125,6 +129,27 @@ function FavoriteSettingPane() {
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+function Miscellaneous() {
+  const settings = {
+    misc_hide_clock: null,
+    misc_hide_date: null,
+    misc_always_show_search_caret: null,
+    misc_hide_search_icon: null,
+    misc_hide_search_bar_if_no_text: null,
+  };
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {Object.keys(settings).map((val) => (
+        <div className="flex items-center gap-2 bg-white/5 py-2 px-5 rounded-lg">
+          <div>{formatLSValue(val)}</div>
+          <ToggleLSBtn lsKey={val} />
+        </div>
+      ))}
     </div>
   );
 }
