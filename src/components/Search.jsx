@@ -31,7 +31,9 @@ export default function Search({ settingsIcon }) {
 
           <input
             type="text"
-            className="outline-none flex-1 text-lg"
+            className={`outline-none flex-1 text-lg ${
+              !text && "caret-transparent"
+            }`}
             value={text}
             onChange={(e) => setText(e.target.value)}
             ref={searchRef}

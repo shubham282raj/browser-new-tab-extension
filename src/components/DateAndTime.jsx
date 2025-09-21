@@ -26,7 +26,7 @@ export default function DateAndTime({ visible }) {
 
   const hourmodulo = localStorage.getItem("12hourformat") == "true" ? 12 : 24;
 
-  return (
+  return time ? (
     <div
       className="absolute left-1/2 -translate-x-1/2 top-2/6 flex flex-col items-center gap-2 transition-all duration-300 ease-in-out select-none"
       style={{ opacity: visible ? 0.8 : 0 }}
@@ -44,5 +44,5 @@ export default function DateAndTime({ visible }) {
         <div>{time.year}</div>
       </div>
     </div>
-  );
+  ) : null;
 }

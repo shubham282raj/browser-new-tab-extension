@@ -43,7 +43,7 @@ export default function SuggestionBox({ searchText }) {
     ...filteredWebsites,
     {
       name: `Google "${searchText}"`,
-      url: `https://www.google.com/search?q=${encodeURIComponent(searchText)}`,
+      url: getGoToUrl(searchText),
     },
     {
       name: `ChatGPT "${searchText}"`,
@@ -92,4 +92,37 @@ export default function SuggestionBox({ searchText }) {
       ))}
     </div>
   );
+}
+
+function getGoToUrl(text) {
+  const trimmed = text.trim();
+
+  // More precise IP validation (0-255 per octet)
+  const ipPattern =
+    /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(:\d+)?$/;
+
+  // Localhost pattern
+  const localhostPattern = /^localhost(:\d+)?$/i;
+
+  // More precise URL pattern
+  const urlPattern =
+    /^((https?:\/\/)?([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,})(\/.*)?$/i;
+
+  // Already has protocol
+  if (/^https?:\/\//i.test(trimmed)) {
+    return trimmed;
+  }
+
+  // Localhost or IP - use http by default
+  if (localhostPattern.test(trimmed) || ipPattern.test(trimmed)) {
+    return `http://${trimmed}`;
+  }
+
+  // Valid domain - use https
+  if (urlPattern.test(trimmed)) {
+    return `https://${trimmed}`;
+  }
+
+  // Default to search
+  return `https://www.google.com/search?q=${encodeURIComponent(trimmed)}`;
 }
