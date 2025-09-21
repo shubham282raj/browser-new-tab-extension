@@ -3,13 +3,13 @@ import { simplifyUrl } from "./SuggestionBox";
 import { addFavorite, deleteFavorite, getFavs } from "../utils/Favorites";
 import { formatLSValue } from "../utils/formatter";
 import ToggleBtn, { ToggleLSBtn } from "./ToggleBtn";
-import { toggleLSKey } from "../utils/utils";
+import { getBoolLS, toggleLSKey } from "../utils/utils";
 
 export function SettingsPane({ onClose }) {
   const subpanes = {
     Favorites: FavoriteSettingPane,
     "Search Engine": SearchEnginePane,
-    Background: "hi",
+    // Background: "hi",
     Misc: MiscellaneousPane,
   };
 
@@ -32,6 +32,7 @@ export function SettingsPane({ onClose }) {
           <div className="flex h-fit gap-2">
             {Object.keys(subpanes).map((name, idx) => (
               <button
+                key={name}
                 className={`px-4 py-2 rounded-lg cursor-pointer  ${
                   selected == name ? "bg-white/10" : "hover:bg-white/5"
                 }`}
@@ -97,37 +98,41 @@ function FavoriteSettingPane() {
       </form>
 
       <div className="flex flex-wrap gap-2 cursor-pointer">
-        {[
-          ...favs,
-          {
-            name: "",
-            url: "",
-          },
-        ].map((fav) => (
-          <div
-            className="flex flex-row gap-2 py-1 px-3 bg-white/5 rounded-md "
-            title={fav.url}
-          >
-            {fav.name || <img src="plus.svg" className="invert opacity-60" />}
-            {fav.name && (
-              <div
-                className=""
-                onClick={(e) => {
-                  e.stopPropagation();
-                  const confirm = window.confirm(
-                    "You want to delete it, right?"
-                  );
-                  if (confirm) {
-                    deleteFavorite(fav);
-                    refreshFavs();
-                  }
-                }}
-              >
-                <img src="trash.svg" className="invert opacity-80 w-5" />
-              </div>
-            )}
-          </div>
-        ))}
+        {
+          // [
+          //   ...favs,
+          //   {
+          //     name: "",
+          //     url: "",
+          //   },
+          // ]
+          favs.map((fav) => (
+            <div
+              key={fav.name + fav.url}
+              className="flex flex-row gap-2 py-1 px-3 bg-white/5 rounded-md "
+              title={fav.url}
+            >
+              {fav.name || <img src="plus.svg" className="invert opacity-60" />}
+              {fav.name && (
+                <div
+                  className=""
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const confirm = window.confirm(
+                      "You want to delete it, right?"
+                    );
+                    if (confirm) {
+                      deleteFavorite(fav);
+                      refreshFavs();
+                    }
+                  }}
+                >
+                  <img src="trash.svg" className="invert opacity-80 w-5" />
+                </div>
+              )}
+            </div>
+          ))
+        }
       </div>
     </div>
   );
@@ -165,14 +170,22 @@ function MiscellaneousPane() {
     misc_always_show_search_caret: null,
     misc_hide_search_icon: null,
     misc_hide_search_bar_if_no_text: null,
+    misc_prevent_address_bar_focus: () => {
+      chrome.storage.local.set({
+        highlight: getBoolLS("misc_prevent_address_bar_focus"),
+      });
+    },
   };
 
   return (
     <div className="flex flex-wrap gap-2">
       {Object.keys(settings).map((val) => (
-        <div className="flex items-center gap-2 bg-white/5 py-2 px-5 rounded-lg">
+        <div
+          key={val}
+          className="flex items-center gap-2 bg-white/5 py-2 px-5 rounded-lg"
+        >
           <div>{formatLSValue(val)}</div>
-          <ToggleLSBtn lsKey={val} />
+          <ToggleLSBtn lsKey={val} toggleCB={settings[val]} />
         </div>
       ))}
     </div>

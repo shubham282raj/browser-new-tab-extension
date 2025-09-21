@@ -20,11 +20,14 @@ export default function ToggleBtn({ getVal, onToggle }) {
   );
 }
 
-export function ToggleLSBtn({ lsKey }) {
+export function ToggleLSBtn({ lsKey, toggleCB = null }) {
   return (
     <ToggleBtn
       getVal={() => localStorage.getItem(lsKey)}
-      onToggle={() => toggleLSKey(lsKey)}
+      onToggle={() => {
+        toggleLSKey(lsKey);
+        if (toggleCB) toggleCB();
+      }}
     />
   );
 }
