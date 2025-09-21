@@ -20,8 +20,6 @@ export default function DateAndTime({ visible }) {
       const year = date.getFullYear();
 
       setTime({ hours, minutes, seconds, day, month, year });
-
-      console.log(hours, minutes, seconds, day, month, year);
     };
 
     updateTime();

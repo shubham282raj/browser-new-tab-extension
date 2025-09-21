@@ -1,37 +1,46 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import Search from "../components/Search";
 import Settings, { SettingsPane } from "../components/Settings";
+import { cacheImage, getCachedImage } from "../utils/indexedDB";
 
 export default function Main() {
   const [toggleSettings, setToggle] = useState(false);
 
-  async function getAutocomplete(query) {
-    const proxyUrl = "https://cors-anywhere.herokuapp.com/"; // CORS proxy
-    const targetUrl = `https://suggestqueries.google.com/complete/search?client=firefox&q=${encodeURIComponent(
-      query
-    )}`;
+  const [bgUrl, setBgUrl] = useState(null);
 
-    const res = await fetch(proxyUrl + targetUrl);
-    const data = await res.json();
-    return data[1]; // array of suggestions
-  }
+  useEffect(() => {
+    async function loadBackground() {
+      // get cached image
+      let url = await getCachedImage("background");
 
-  // Example usage
-  getAutocomplete("react").then((suggestions) => console.log(suggestions));
+      // if not cached, fetch and cache it
+      if (!url) {
+        const bgPath = `${import.meta.env.BASE_URL}background.png`;
+        await cacheImage(bgPath, "background");
+        url = await getCachedImage("background");
+      }
+
+      setBgUrl(url);
+    }
+
+    loadBackground();
+  }, []);
 
   return (
-    <div
-      className="h-screen w-screen relative bg-cover bg-center"
-      style={{ backgroundImage: `url("background.png")` }}
-    >
-      <div className="overlayGradient"></div>
-      {toggleSettings ? (
-        <SettingsPane onClose={() => setToggle(false)} />
-      ) : (
-        <Search
-          settingsIcon={<Settings onClick={() => setToggle((v) => !v)} />}
-        />
-      )}
-    </div>
+    bgUrl && (
+      <div
+        className="h-screen w-screen relative bg-cover bg-center"
+        style={{ backgroundImage: bgUrl ? `url(${bgUrl})` : "none" }}
+      >
+        <div className="overlayGradient"></div>
+        {toggleSettings ? (
+          <SettingsPane onClose={() => setToggle(false)} />
+        ) : (
+          <Search
+            settingsIcon={<Settings onClick={() => setToggle((v) => !v)} />}
+          />
+        )}
+      </div>
+    )
   );
 }
