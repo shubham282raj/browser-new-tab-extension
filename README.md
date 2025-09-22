@@ -1,12 +1,23 @@
-# React + Vite
+# Browser New Page Extension
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+New Tab alternative page for chromium based browsers
 
-Currently, two official plugins are available:
+## How to use
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Download the latest release & unzip it
 
-## Expanding the ESLint configuration
+- Go to the extension management page of your browser
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+  - Chromium: chrome://extensions/
+  - Chrome: chrome://extensions/
+  - Edge: edge://extensions/
+  - Brave: brave://extensions/
+  - Opera: opera://extensions/
+
+- Turn on developer mode
+
+  Should be here or there on the screen itself
+
+- Look for "Load unpacked" button
+
+- Simply point it to the unzipped folder of the release
