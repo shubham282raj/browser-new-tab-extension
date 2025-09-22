@@ -21,7 +21,7 @@ export default function Search({ settingsIcon }) {
 
   return (
     <>
-      <div className={`absolute top-1/2 left-1/2 -translate-1/2`}>
+      <div className={`absolute top-1/2 left-1/2 -translate-1/2 select-none`}>
         <DateAndTime visible={!text.trim()} />
 
         <div

@@ -142,6 +142,7 @@ function FavoriteSettingPane() {
 function BackgroundSettings() {
   const boolSettings = {
     misc_disable_background_rain: null,
+    misc_rain_version_2: null,
   };
 
   const textSettings = {
@@ -170,13 +171,13 @@ function BackgroundSettings() {
           <LSTextField lsKey={val} placeholder={textSettings[val]} />
         ))}
 
-        <BackgroundImage />
+        <BackgroundImageSettings />
       </div>
     </div>
   );
 }
 
-function BackgroundImage() {
+function BackgroundImageSettings() {
   function _BGImageComp({ src, isSelected, selectFn, deleteFn }) {
     return (
       <div className="h-35 aspect-video border-neutral-400 group relative first:rounded-bl-lg last:rounded-br-lg overflow-clip">

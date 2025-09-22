@@ -5,6 +5,7 @@ import { cacheImage, getCachedImage } from "../utils/indexedDB";
 import { getBoolLS } from "../utils/utils";
 import { getAllBookmarks } from "../utils/bookmark";
 import RainCanvas from "../components/Rain";
+import RainV2Canvas from "../components/RainV2";
 
 export default function Main() {
   const [toggleSettings, setToggle] = useState(false);
@@ -29,7 +30,8 @@ export default function Main() {
         className="h-screen w-screen absolute top-0 left-0 bg-cover bg-center"
         style={{ backgroundImage: bgUrl ? `url(${bgUrl})` : "none" }}
       ></div>
-      {!getBoolLS("misc_disable_background_rain") && <RainCanvas />}
+      {!getBoolLS("misc_disable_background_rain") &&
+        (getBoolLS("misc_rain_version_2") ? <RainV2Canvas /> : <RainCanvas />)}
       <div className="overlayGradient"></div>
 
       {toggleSettings ? (

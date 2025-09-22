@@ -28,7 +28,7 @@ const RainCanvas = () => {
           x: Math.random() * width,
           y: Math.random() * height,
           length: Math.random() * 20 + 10,
-          speed: (Math.random() * 5 + 4) * 0.8,
+          speed: (Math.random() * 5 + 4) * 1,
           opacity: Math.random() * 0.5 + 0.2,
         });
       }
