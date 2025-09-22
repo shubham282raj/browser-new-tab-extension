@@ -4,6 +4,7 @@ import Settings, { SettingsPane } from "../components/Settings";
 import { cacheImage, getCachedImage } from "../utils/indexedDB";
 import { getBoolLS } from "../utils/utils";
 import { getAllBookmarks } from "../utils/bookmark";
+import RainCanvas from "../components/Rain";
 
 export default function Main() {
   const [toggleSettings, setToggle] = useState(false);
@@ -28,16 +29,15 @@ export default function Main() {
   //   loadBackground();
   // }, []);
 
-  useEffect(() => {
-    getAllBookmarks().then((e) => console.log(e));
-  }, []);
-
   return (
-    <div
-      className="h-screen w-screen relative bg-cover bg-center text-base"
-      style={{ backgroundImage: bgUrl ? `url(${bgUrl})` : "none" }}
-    >
+    <div className="h-screen w-screen relative z-0 text-base">
+      <div
+        className="h-screen w-screen absolute top-0 left-0 bg-cover bg-center"
+        style={{ backgroundImage: bgUrl ? `url(${bgUrl})` : "none" }}
+      ></div>
+      <RainCanvas />
       <div className="overlayGradient"></div>
+
       {toggleSettings ? (
         <SettingsPane onClose={() => setToggle(false)} />
       ) : (

@@ -9,10 +9,6 @@ export default function Bookmarks() {
     getAllBookmarks().then((flatbms) => setBms(flatbms));
   }, []);
 
-  const opacity = getLS("misc_favorite_bar_opacity")
-    ? Number(getLS("misc_favorite_bar_opacity"))
-    : 20;
-
   return (
     <div
       className={`absolute flex flex-wrap justify-center gap-2 max-w-full p-2 mt-4 ${
