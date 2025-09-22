@@ -29,7 +29,7 @@ export default function Main() {
 
   return (
     <div
-      className="h-screen w-screen relative bg-cover bg-center"
+      className="h-screen w-screen relative bg-cover bg-center text-base"
       style={{ backgroundImage: bgUrl ? `url(${bgUrl})` : "none" }}
     >
       <div className="overlayGradient"></div>
