@@ -35,7 +35,7 @@ export default function Main() {
         className="h-screen w-screen absolute top-0 left-0 bg-cover bg-center"
         style={{ backgroundImage: bgUrl ? `url(${bgUrl})` : "none" }}
       ></div>
-      <RainCanvas />
+      {!getBoolLS("misc_disable_background_rain") && <RainCanvas />}
       <div className="overlayGradient"></div>
 
       {toggleSettings ? (

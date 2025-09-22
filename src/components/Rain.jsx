@@ -1,7 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 const RainCanvas = () => {
   const canvasRef = useRef(null);
+
+  let relSpeedChange = getRelativeRainNums("misc_rain_speed");
+  let relRainDensity = getRelativeRainNums("misc_rain_density");
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -13,18 +16,24 @@ const RainCanvas = () => {
     canvas.width = width;
     canvas.height = height;
 
-    const drops = [];
-    const dropCount = 300;
+    let drops = [];
 
-    for (let i = 0; i < dropCount; i++) {
-      drops.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        length: Math.random() * 20 + 10,
-        speed: Math.random() * 5 + 4,
-        opacity: Math.random() * 0.5 + 0.2,
-      });
-    }
+    const initDrops = () => {
+      // drop count proportionate to 2560x1440 screen
+      const dropCount = 300 * (width / 2560) * (height / 1440) * relRainDensity;
+
+      drops.length = 0;
+      for (let i = 0; i < dropCount; i++) {
+        drops.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          length: Math.random() * 20 + 10,
+          speed: (Math.random() * 5 + 4) * 0.8,
+          opacity: Math.random() * 0.5 + 0.2,
+        });
+      }
+    };
+    initDrops();
 
     const drawRain = () => {
       ctx.clearRect(0, 0, width, height);
@@ -38,7 +47,7 @@ const RainCanvas = () => {
         ctx.lineTo(d.x, d.y + d.length);
         ctx.stroke();
 
-        d.y += d.speed;
+        d.y += d.speed * relSpeedChange;
         if (d.y > height) {
           d.y = -d.length;
           d.x = Math.random() * width;
@@ -55,6 +64,7 @@ const RainCanvas = () => {
       height = window.innerHeight;
       canvas.width = width;
       canvas.height = height;
+      initDrops();
     };
 
     window.addEventListener("resize", handleResize);
@@ -75,6 +85,12 @@ const RainCanvas = () => {
       }}
     />
   );
+};
+
+const getRelativeRainNums = (lsKey) => {
+  let s = localStorage.getItem(lsKey);
+  s = Number(s);
+  return s == NaN || s == 0 ? 1 : s;
 };
 
 export default RainCanvas;

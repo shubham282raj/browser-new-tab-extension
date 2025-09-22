@@ -9,7 +9,7 @@ export function SettingsPane({ onClose }) {
   const subpanes = {
     Favorites: FavoriteSettingPane,
     "Search Engine": SearchEnginePane,
-    // Background: "hi",
+    "Background Rain": BackgroundSettings,
     Misc: MiscellaneousPane,
   };
 
@@ -33,7 +33,7 @@ export function SettingsPane({ onClose }) {
             {Object.keys(subpanes).map((name, idx) => (
               <button
                 key={name}
-                className={`px-4 py-2 rounded-lg cursor-pointer  ${
+                className={`px-4 py-2 rounded-lg cursor-pointer transition-colors duration-200 ${
                   selected == name ? "bg-white/10" : "hover:bg-white/5"
                 }`}
                 onClick={() => setSelected(name)}
@@ -133,6 +133,41 @@ function FavoriteSettingPane() {
             </div>
           ))
         }
+      </div>
+    </div>
+  );
+}
+
+function BackgroundSettings() {
+  const boolSettings = {
+    misc_disable_background_rain: null,
+  };
+
+  const textSettings = {
+    misc_rain_speed: "Relative Rain Speed Change | Defaut: 1",
+    misc_rain_density: "Relative Rain Density Change | Defaut: 1",
+  };
+
+  return (
+    <div>
+      <div className="flex flex-wrap gap-2">
+        <div className="w-full text-center mb-2">
+          Some of these settings may require page refresh
+        </div>
+
+        {Object.keys(boolSettings).map((val) => (
+          <div
+            key={val}
+            className="flex items-center gap-2 bg-white/5 py-2 px-5 rounded-lg"
+          >
+            <div>{formatLSValue(val)}</div>
+            <ToggleLSBtn lsKey={val} toggleCB={boolSettings[val]} />
+          </div>
+        ))}
+
+        {Object.keys(textSettings).map((val) => (
+          <LSTextField lsKey={val} placeholder={textSettings[val]} />
+        ))}
       </div>
     </div>
   );
