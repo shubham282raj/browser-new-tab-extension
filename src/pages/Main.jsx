@@ -3,6 +3,7 @@ import Search from "../components/Search";
 import Settings, { SettingsPane } from "../components/Settings";
 import { cacheImage, getCachedImage } from "../utils/indexedDB";
 import { getBoolLS } from "../utils/utils";
+import { getAllBookmarks } from "../utils/bookmark";
 
 export default function Main() {
   const [toggleSettings, setToggle] = useState(false);
@@ -26,6 +27,10 @@ export default function Main() {
 
   //   loadBackground();
   // }, []);
+
+  useEffect(() => {
+    getAllBookmarks().then((e) => console.log(e));
+  }, []);
 
   return (
     <div
