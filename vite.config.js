@@ -4,7 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig(({ mode }) => {
   return {
-    base: mode === "ghpages" ? "/repo-name/" : "/", // change repo-name to your GitHub repo name
+    base: mode === "ghpages" ? "/browser-new-tab-extension/" : "/", // change repo-name to your GitHub repo name
     plugins: [react(), tailwindcss()],
   };
 });
