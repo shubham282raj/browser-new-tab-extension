@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { simplifyUrl } from "./SuggestionBox";
 import { addFavorite, deleteFavorite, getFavs } from "../utils/Favorites";
 import { formatLSValue } from "../utils/formatter";
-import ToggleBtn, { ToggleLSBtn } from "./ToggleBtn";
+import ToggleBtn, { LSTextField, ToggleLSBtn } from "./ToggleBtn";
 import { getBoolLS, toggleLSKey } from "../utils/utils";
 
 export function SettingsPane({ onClose }) {
@@ -164,25 +164,38 @@ function SearchEnginePane() {
 }
 
 function MiscellaneousPane() {
-  const settings = {
+  const boolSettings = {
     misc_hide_clock: null,
     misc_hide_date: null,
     misc_always_show_search_caret: null,
     misc_hide_search_icon: null,
     misc_hide_search_bar_if_no_text: null,
+    misc_12_hour_format: null,
+    misc_hide_web_icons: null,
+    misc_always_show_favorites: null,
+  };
+
+  const textSettings = {
+    // misc_favorite_bar_opacity: "Range: [0, 100] Defaut: 70",
   };
 
   return (
-    <div className="flex flex-wrap gap-2">
-      {Object.keys(settings).map((val) => (
-        <div
-          key={val}
-          className="flex items-center gap-2 bg-white/5 py-2 px-5 rounded-lg"
-        >
-          <div>{formatLSValue(val)}</div>
-          <ToggleLSBtn lsKey={val} toggleCB={settings[val]} />
-        </div>
-      ))}
+    <div>
+      <div className="flex flex-wrap gap-2">
+        {Object.keys(boolSettings).map((val) => (
+          <div
+            key={val}
+            className="flex items-center gap-2 bg-white/5 py-2 px-5 rounded-lg"
+          >
+            <div>{formatLSValue(val)}</div>
+            <ToggleLSBtn lsKey={val} toggleCB={boolSettings[val]} />
+          </div>
+        ))}
+
+        {Object.keys(textSettings).map((val) => (
+          <LSTextField lsKey={val} placeholder={textSettings[val]} />
+        ))}
+      </div>
     </div>
   );
 }

@@ -88,7 +88,7 @@ export default function SuggestionBox({ searchText }) {
     <div ref={containerRef} className="absolute w-full overflow-y-auto">
       {allSuggestions.map((site, idx) => (
         <SuggestionEntity
-          key={site.url}
+          key={site.url + idx}
           name={site.name}
           url={site.url}
           index={idx}

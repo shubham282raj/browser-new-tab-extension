@@ -28,11 +28,12 @@ export default function DateAndTime({ visible }) {
     return () => clearInterval(interval);
   }, []);
 
-  const hourmodulo = localStorage.getItem("12hourformat") == "true" ? 12 : 24;
+  const hourmodulo =
+    localStorage.getItem("misc_12_hour_format") == "true" ? 12 : 24;
 
   return time ? (
     <div
-      className="absolute left-1/2 -translate-x-1/2 top-2/6 flex flex-col items-center gap-2 transition-all duration-300 ease-in-out select-none"
+      className="absolute left-1/2 -translate-x-1/2 bottom-[calc(100%+20px)] flex flex-col items-center gap-2 transition-all duration-300 ease-in-out select-none"
       style={{ opacity: visible ? 0.8 : 0 }}
     >
       {!hideClock && (

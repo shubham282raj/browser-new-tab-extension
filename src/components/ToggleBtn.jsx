@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { toggleLSKey } from "../utils/utils";
+import { formatLSValue } from "../utils/formatter";
 
 export default function ToggleBtn({ getVal, onToggle }) {
   const [value, setValue] = useState(getVal() == "true");
@@ -29,5 +30,23 @@ export function ToggleLSBtn({ lsKey, toggleCB = null }) {
         if (toggleCB) toggleCB();
       }}
     />
+  );
+}
+
+export function LSTextField({ lsKey, placeholder }) {
+  return (
+    <div key={lsKey} className="flex items-center gap-2 w-full px-2">
+      <div>{formatLSValue(lsKey)}</div>
+      <input
+        type="text"
+        required
+        onChange={(e) => {
+          localStorage.setItem(lsKey, e.target.value.trim());
+        }}
+        defaultValue={localStorage.getItem(lsKey)}
+        placeholder={placeholder}
+        className="grow-1 text-md outline-0 bg-white/5 px-4 py-2 rounded-lg"
+      />
+    </div>
   );
 }

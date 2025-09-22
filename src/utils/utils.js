@@ -7,3 +7,5 @@ export const toggleLSKey = (key) => {
 export const getBoolLS = (key) => {
   return localStorage.getItem(key) == "true";
 };
+
+export const getLS = (key) => localStorage.getItem(key);
