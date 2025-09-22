@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { getFavs } from "../utils/Favorites";
+import { getAllBookmarks } from "../utils/bookmark";
 
 export const simplifyUrl = (url) => {
   let res = String(url)
@@ -33,9 +34,20 @@ export default function SuggestionBox({ searchText }) {
   const [focusedIndex, setFocusedIndex] = useState(0); // -1 = none focused
   const containerRef = useRef(null);
 
-  const filteredWebsites = getFavs()
-    .filter((site) =>
-      site.name.toLowerCase().includes(searchText.toLowerCase())
+  const [favs, setFavs] = useState(getFavs());
+
+  useEffect(() => {
+    getAllBookmarks().then((bms) => {
+      const bookmarks = bms.map((bm) => ({ name: bm.title, url: bm.url }));
+      setFavs((v) => [...v, ...bookmarks]);
+    });
+  }, []);
+
+  const filteredWebsites = favs
+    .filter(
+      (site) =>
+        site.name.toLowerCase().includes(searchText.toLowerCase()) ||
+        site.url.toLowerCase().includes(searchText.toLowerCase())
     )
     .slice(0, 5);
 

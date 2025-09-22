@@ -28,7 +28,7 @@ export function SettingsPane({ onClose }) {
           e.stopPropagation();
         }}
       >
-        <div className="bg-white/5 w-2xl min-h-40 rounded-xl p-4 flex flex-col gap-2 shadow">
+        <div className="bg-white/5 w-2xl  rounded-xl p-4 flex flex-col gap-2 shadow">
           <div className="flex h-fit gap-2">
             {Object.keys(subpanes).map((name, idx) => (
               <button
@@ -63,6 +63,10 @@ function FavoriteSettingPane() {
 
   return (
     <div className="max-h-70 overflow-y-auto flex flex-col gap-4">
+      <div className="text-center">
+        You may consider these additional bookmarks
+      </div>
+
       <form
         className="flex gap-2"
         onSubmit={(e) => {
@@ -98,41 +102,32 @@ function FavoriteSettingPane() {
       </form>
 
       <div className="flex flex-wrap gap-2 cursor-pointer">
-        {
-          // [
-          //   ...favs,
-          //   {
-          //     name: "",
-          //     url: "",
-          //   },
-          // ]
-          favs.map((fav) => (
-            <div
-              key={fav.name + fav.url}
-              className="flex flex-row gap-2 py-1 px-3 bg-white/5 rounded-md "
-              title={fav.url}
-            >
-              {fav.name || <img src="plus.svg" className="invert opacity-60" />}
-              {fav.name && (
-                <div
-                  className=""
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    const confirm = window.confirm(
-                      "You want to delete it, right?"
-                    );
-                    if (confirm) {
-                      deleteFavorite(fav);
-                      refreshFavs();
-                    }
-                  }}
-                >
-                  <img src="trash.svg" className="invert opacity-80 w-5" />
-                </div>
-              )}
-            </div>
-          ))
-        }
+        {favs.map((fav) => (
+          <div
+            key={fav.name + fav.url}
+            className="flex flex-row gap-2 py-1 px-3 bg-white/5 rounded-md "
+            title={fav.url}
+          >
+            {fav.name || <img src="plus.svg" className="invert opacity-60" />}
+            {fav.name && (
+              <div
+                className=""
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const confirm = window.confirm(
+                    "You want to delete it, right?"
+                  );
+                  if (confirm) {
+                    deleteFavorite(fav);
+                    refreshFavs();
+                  }
+                }}
+              >
+                <img src="trash.svg" className="invert opacity-80 w-5" />
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -175,7 +170,10 @@ function BackgroundSettings() {
 
 function SearchEnginePane() {
   return (
-    <div>
+    <div className="flex flex-col gap-4">
+      <div className="text-center">
+        You may consider these additional bookmarks
+      </div>
       <div className="flex gap-2">
         <div className="text-md outline-0 px-4 py-2 rounded-lg">
           Defaut Page
@@ -192,8 +190,6 @@ function SearchEnginePane() {
           className="grow-1 text-md outline-0 bg-white/5 px-4 py-2 rounded-lg"
         />
       </div>
-
-      <div></div>
     </div>
   );
 }
