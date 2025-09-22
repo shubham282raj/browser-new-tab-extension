@@ -1,15 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { simplifyUrl } from "./SuggestionBox";
 import { addFavorite, deleteFavorite, getFavs } from "../utils/Favorites";
 import { formatLSValue } from "../utils/formatter";
 import ToggleBtn, { LSTextField, ToggleLSBtn } from "./ToggleBtn";
 import { getBoolLS, toggleLSKey } from "../utils/utils";
+import {
+  cacheUploadedImage,
+  deleteCachedImage,
+  getCachedImage,
+  listCachedImageKeys,
+} from "../utils/indexedDB";
 
 export function SettingsPane({ onClose }) {
   const subpanes = {
     Favorites: FavoriteSettingPane,
     "Search Engine": SearchEnginePane,
-    "Background Rain": BackgroundSettings,
+    Background: BackgroundSettings,
     Misc: MiscellaneousPane,
   };
 
@@ -163,17 +169,173 @@ function BackgroundSettings() {
         {Object.keys(textSettings).map((val) => (
           <LSTextField lsKey={val} placeholder={textSettings[val]} />
         ))}
+
+        <BackgroundImage />
       </div>
     </div>
+  );
+}
+
+function BackgroundImage() {
+  function _BGImageComp({ src, isSelected, selectFn, deleteFn }) {
+    return (
+      <div className="h-35 aspect-video border-neutral-400 group relative first:rounded-bl-lg last:rounded-br-lg overflow-clip">
+        <img
+          src={src}
+          alt=""
+          className="h-full w-full bg-cover bg-center object-cover"
+        />
+
+        <button
+          className={`absolute top-1/2 left-1/2 -translate-1/2 py-1 px-3 rounded-full not-disabled:cursor-pointer transition-opacity duration-200 ${
+            isSelected
+              ? "bg-black/70"
+              : "opacity-0 group-hover:opacity-100 bg-black/70"
+          }`}
+          disabled={isSelected}
+          onClick={(e) => {
+            e.stopPropagation();
+            selectFn();
+          }}
+        >
+          {isSelected ? "Selected" : "Select"}
+        </button>
+
+        {deleteFn && (
+          <button
+            className="absolute w-9 h-9 p-2 m-1 top-0 right-0 invert bg-white/50 rounded-lg cursor-pointer opacity-0 group-hover:opacity-70 transition-opacity"
+            title="Delete"
+            onClick={(e) => {
+              e.stopPropagation();
+              deleteFn();
+            }}
+          >
+            <img src="trash.svg" alt="" className="w-full h-full" />
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  const [imageURLs, setImageURLs] = useState({});
+  const [selectedImg, setSelectedImg] = useState(
+    localStorage.getItem("bgImage") || "default"
+  );
+
+  const getImageURLs = async () => {
+    for (const prevUrl of Object.values(imageURLs)) {
+      URL.revokeObjectURL(prevUrl);
+    }
+
+    return listCachedImageKeys().then(async (keys) => {
+      console.log("hle");
+      const urls = {};
+      for (const key of keys) {
+        const url = await getCachedImage(key);
+        if (url) urls[key] = url;
+      }
+
+      setImageURLs(urls);
+    });
+  };
+
+  useEffect(() => {
+    getImageURLs();
+  }, []);
+
+  const setAsBgImage = (name) => {
+    if (name) {
+      localStorage.setItem("bgImage", name);
+    } else {
+      localStorage.removeItem("bgImage");
+    }
+
+    setSelectedImg(localStorage.getItem("bgImage") || "default");
+  };
+
+  const deleteImage = async (imgkey) => {
+    const bool = confirm("Are you sure you want to delete this image?");
+    if (!bool || Number(imgkey) == NaN) return;
+
+    if (localStorage.getItem("bgImage") == imgkey) {
+      localStorage.removeItem("bgImage");
+    }
+
+    await deleteCachedImage(Number(imgkey));
+    await getImageURLs();
+    setSelectedImg(localStorage.getItem("bgImage") || "default");
+  };
+
+  return (
+    <div className="p-2 flex flex-col gap-2 w-full select-none">
+      <div className="flex justify-between items-center">
+        <div>Set Background Image</div>
+        <UploadButton cb={getImageURLs} />
+      </div>
+      <div className="flex overflow-x-scroll gap-2">
+        {Object.keys(imageURLs)
+          .reverse()
+          .map((imgkey) => (
+            <_BGImageComp
+              key={imgkey}
+              src={imageURLs[imgkey]}
+              selectFn={() => setAsBgImage(imgkey)}
+              deleteFn={() => deleteImage(imgkey)}
+              isSelected={selectedImg == imgkey}
+            />
+          ))}
+
+        <_BGImageComp
+          src={"background.png"}
+          selectFn={() => setAsBgImage(null)}
+          isSelected={selectedImg == "default"}
+        />
+      </div>
+    </div>
+  );
+}
+
+function UploadButton({ cb }) {
+  const fileInputRef = useRef(null);
+
+  const handleClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      await cacheUploadedImage(file, new Date().getTime());
+      if (cb) cb();
+    }
+  };
+
+  return (
+    <>
+      <button
+        onClick={handleClick}
+        className="flex items-center bg-white/5 px-3 py-1 rounded-lg cursor-pointer"
+      >
+        Add
+        <img src="plus.svg" className="invert opacity-80 ml-2" alt="plus" />
+      </button>
+
+      {/* hidden input */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        className="hidden"
+        accept="image/*"
+        onChange={handleFileChange}
+      />
+    </>
   );
 }
 
 function SearchEnginePane() {
   return (
     <div className="flex flex-col gap-4">
-      <div className="text-center">
-        You may consider these additional bookmarks
-      </div>
+      {/* <div className="text-center">More to come</div> */}
       <div className="flex gap-2">
         <div className="text-md outline-0 px-4 py-2 rounded-lg">
           Defaut Page

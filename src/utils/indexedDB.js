@@ -28,7 +28,10 @@ export async function cacheImage(url, key = "background") {
   });
 }
 
-export async function getCachedImage(key = "background") {
+export async function getCachedImage(key) {
+  key = Number(key);
+  if (key == NaN) return;
+
   const db = await openDB();
 
   return new Promise((resolve, reject) => {
@@ -45,6 +48,52 @@ export async function getCachedImage(key = "background") {
       resolve(url);
     };
 
+    request.onerror = (event) => reject(event.target.error);
+  });
+}
+
+export async function cacheUploadedImage(file, key) {
+  const db = await openDB();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction("images", "readwrite");
+    const store = transaction.objectStore("images");
+
+    // store File/Blob directly
+    const request = store.put(file, key);
+
+    request.onsuccess = () => resolve();
+    request.onerror = (event) => reject(event.target.error);
+  });
+}
+
+export async function listCachedImageKeys() {
+  const db = await openDB();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction("images", "readonly");
+    const store = transaction.objectStore("images");
+
+    const request = store.getAllKeys();
+
+    request.onsuccess = (event) => {
+      resolve(event.target.result); // array of all keys
+    };
+
+    request.onerror = (event) => reject(event.target.error);
+  });
+}
+
+export async function deleteCachedImage(imgkey) {
+  const db = await openDB();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction("images", "readwrite");
+    const store = transaction.objectStore("images");
+
+    const request = store.delete(imgkey);
+
+    request.onsuccess = () => resolve();
     request.onerror = (event) => reject(event.target.error);
   });
 }

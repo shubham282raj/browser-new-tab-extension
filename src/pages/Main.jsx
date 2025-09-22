@@ -9,25 +9,19 @@ import RainCanvas from "../components/Rain";
 export default function Main() {
   const [toggleSettings, setToggle] = useState(false);
 
-  const [bgUrl, setBgUrl] = useState("background.png");
+  const bgImageKey = localStorage.getItem("bgImage");
 
-  // useEffect(() => {
-  //   async function loadBackground() {
-  //     // get cached image
-  //     let url = await getCachedImage("background");
+  const [bgUrl, setBgUrl] = useState(!bgImageKey && "background.png");
 
-  //     // if not cached, fetch and cache it
-  //     if (!url) {
-  //       const bgPath = `${import.meta.env.BASE_URL}background.png`;
-  //       await cacheImage(bgPath, "background");
-  //       url = await getCachedImage("background");
-  //     }
+  useEffect(() => {
+    async function loadBackground() {
+      let url = await getCachedImage(bgImageKey);
 
-  //     setBgUrl(url);
-  //   }
+      if (url) setBgUrl(url);
+    }
 
-  //   loadBackground();
-  // }, []);
+    if (bgImageKey) loadBackground();
+  }, []);
 
   return (
     <div className="h-screen w-screen relative z-0 text-base">
