@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useLayoutEffect } from "react";
 import {
   addTodo,
   getTodos,
@@ -124,18 +124,53 @@ function ToDoHeader({ onDrag, onDragEnd }) {
     </div>
   );
 }
-
 function ToDoList() {
   const [ipt, setIpt] = useState("");
   const [todolist, settodolist] = useState(getTodos());
+
+  const positions = useRef(new Map());
+
   refreshToDoList = () => settodolist(getTodos());
+
+  useLayoutEffect(() => {
+    const nodes = document.querySelectorAll(".todo-item");
+
+    nodes.forEach((node) => {
+      const key = node.dataset.key;
+      const first = positions.current.get(key);
+      const last = node.getBoundingClientRect();
+
+      if (first) {
+        const dx = first.left - last.left;
+        const dy = first.top - last.top;
+
+        if (dx || dy) {
+          // Invert
+          node.style.transform = `translate(${dx}px, ${dy}px)`;
+          node.style.transition = "transform 0s";
+
+          requestAnimationFrame(() => {
+            // Play
+            node.style.transform = "";
+            node.style.transition = "transform 300ms ease";
+          });
+        }
+      }
+
+      positions.current.set(key, last);
+    });
+  }, [todolist]);
 
   return (
     <div>
       {todolist
         .sort((a, b) => a.done - b.done)
         .map((todo) => (
-          <div key={todo.time} className="flex justify-between py-1 px-2">
+          <div
+            key={todo.time}
+            data-key={todo.time}
+            className="todo-item flex justify-between py-1 px-2"
+          >
             <div>
               <div>{todo.name}</div>
             </div>
