@@ -5,7 +5,7 @@ import {
   removeCompletedTodo,
   toggleTodo,
 } from "../utils/todo";
-import { toggleLSKey } from "../utils/utils";
+import { getBoolLS, toggleLSKey } from "../utils/utils";
 
 let refreshToDoList = () => {};
 
@@ -37,7 +37,9 @@ export default function ToDo() {
   return (
     <div
       ref={dragRef}
-      className="absolute bg-white/10 w-80 flex flex-col gap-2 p-2 rounded-lg group"
+      className={`absolute w-80 flex flex-col gap-2 p-2 rounded-lg group ${
+        getBoolLS("todo_translucent_backgroud") && "bg-white/10"
+      }`}
       style={{
         top: coor.x,
         left: coor.y,
@@ -79,8 +81,15 @@ function ToDoHeader({ onDrag, onDragEnd }) {
   };
 
   return (
-    <div className="bg-white/10 rounded-lg select-none flex group">
-      <div className="p-2 flex-1">ToDo</div>
+    <div
+      className={`rounded-lg select-none flex group ${
+        getBoolLS("todo_translucent_backgroud") && "bg-white/10"
+      }`}
+    >
+      <div className="p-2 flex-1">
+        {!getBoolLS("todo_hide_header_text") &&
+          (localStorage.getItem("todo_header_text") || "To Do List")}
+      </div>
 
       {/* show/hide completed todos */}
       <div
@@ -169,11 +178,18 @@ function ToDoList() {
           <div
             key={todo.time}
             data-key={todo.time}
-            className="todo-item flex justify-between py-1 px-2"
+            className="todo-item flex justify-between items-center gap-1 py-1 px-2"
           >
-            <div>
+            <div className="flex-1" title={formatTODOTime(todo.time)}>
               <div>{todo.name}</div>
             </div>
+
+            {getBoolLS("todo_show_to_do_time_added") && (
+              <div className="text-xs opacity-50">
+                {formatTODOTime(todo.time)}
+              </div>
+            )}
+
             <button
               className="w-5 h-5 p-1 rounded-full bg-white/10 cursor-pointer"
               onClick={(e) => {
@@ -198,7 +214,10 @@ function ToDoList() {
           setIpt("");
           refreshToDoList();
         }}
-        className="flex hover:bg-white/10 rounded-lg p-2"
+        className={`flex rounded-lg p-2 ${
+          getBoolLS("todo_translucent_backgroud") &&
+          "hover:bg-white/10 transition-colors duration-300"
+        }`}
       >
         <input
           id="todo_input"
@@ -208,10 +227,20 @@ function ToDoList() {
           onChange={(e) => setIpt(e.target.value)}
           className=" w-full outline-0"
         />
-        <button type="submit">
+        <button type="submit" className="cursor-pointer">
           <img src="send-horizontal.svg" alt="" className="invert opacity-70" />
         </button>
       </form>
     </div>
   );
 }
+
+const formatTODOTime = (str) =>
+  new Date(str).toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+// .replace(",", "");

@@ -14,7 +14,8 @@ import {
 export function SettingsPane({ onClose }) {
   const subpanes = {
     Favorites: FavoriteSettingPane,
-    "Search Engine": SearchEnginePane,
+    // "Search Engine": SearchEnginePane,
+    "To Do": ToDoSettings,
     Background: BackgroundSettings,
     Misc: MiscellaneousPane,
   };
@@ -352,6 +353,42 @@ function SearchEnginePane() {
           placeholder="URL (This would open if you press Enter with no text)"
           className="grow-1 text-md outline-0 bg-white/5 px-4 py-2 rounded-lg"
         />
+      </div>
+    </div>
+  );
+}
+
+function ToDoSettings() {
+  const boolSettings = {
+    todo_disable_to_do_list: null,
+    todo_translucent_backgroud: null,
+    todo_hide_header_text: null,
+    todo_show_history: null,
+    todo_show_to_do_time_added: null,
+  };
+
+  const textSettings = {
+    todo_offset_top: "Default: 0",
+    todo_offset_left: "Default: 0",
+    todo_header_text: "Default: To Do List",
+  };
+
+  return (
+    <div>
+      <div className="flex flex-wrap gap-2">
+        {Object.keys(boolSettings).map((val) => (
+          <div
+            key={val}
+            className="flex items-center gap-2 bg-white/5 py-2 px-5 rounded-lg"
+          >
+            <div>{formatLSValue(val)}</div>
+            <ToggleLSBtn lsKey={val} toggleCB={boolSettings[val]} />
+          </div>
+        ))}
+
+        {Object.keys(textSettings).map((val) => (
+          <LSTextField lsKey={val} placeholder={textSettings[val]} />
+        ))}
       </div>
     </div>
   );
