@@ -221,7 +221,7 @@ function BackgroundImageSettings() {
 
   const [imageURLs, setImageURLs] = useState({});
   const [selectedImg, setSelectedImg] = useState(
-    localStorage.getItem("bgImage") || "default"
+    localStorage.getItem("bgImage") || "0"
   );
 
   const getImageURLs = async () => {
@@ -230,7 +230,6 @@ function BackgroundImageSettings() {
     }
 
     return listCachedImageKeys().then(async (keys) => {
-      console.log("hle");
       const urls = {};
       for (const key of keys) {
         const url = await getCachedImage(key);
@@ -252,7 +251,7 @@ function BackgroundImageSettings() {
       localStorage.removeItem("bgImage");
     }
 
-    setSelectedImg(localStorage.getItem("bgImage") || "default");
+    setSelectedImg(localStorage.getItem("bgImage") || "0");
   };
 
   const deleteImage = async (imgkey) => {
@@ -265,7 +264,7 @@ function BackgroundImageSettings() {
 
     await deleteCachedImage(Number(imgkey));
     await getImageURLs();
-    setSelectedImg(localStorage.getItem("bgImage") || "default");
+    setSelectedImg(localStorage.getItem("bgImage") || "0");
   };
 
   return (
@@ -282,16 +281,16 @@ function BackgroundImageSettings() {
               key={imgkey}
               src={imageURLs[imgkey]}
               selectFn={() => setAsBgImage(imgkey)}
-              deleteFn={() => deleteImage(imgkey)}
+              deleteFn={imgkey == "0" ? null : () => deleteImage(imgkey)}
               isSelected={selectedImg == imgkey}
             />
           ))}
 
-        <_BGImageComp
+        {/* <_BGImageComp
           src={"background.png"}
-          selectFn={() => setAsBgImage(null)}
+          selectFn={() => setAsBgImage("0")}
           isSelected={selectedImg == "default"}
-        />
+        /> */}
       </div>
     </div>
   );

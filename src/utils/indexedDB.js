@@ -12,7 +12,7 @@ function openDB() {
   });
 }
 
-export async function cacheImage(url, key = "background") {
+export async function cacheImage(url, key) {
   const db = await openDB();
 
   const response = await fetch(url);
@@ -29,6 +29,7 @@ export async function cacheImage(url, key = "background") {
 }
 
 export async function getCachedImage(key) {
+  console.log(key);
   key = Number(key);
   if (key == NaN) return;
 

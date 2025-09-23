@@ -22,7 +22,14 @@ export default function Main() {
       if (url) setBgUrl(url);
     }
 
+    async function saveDefaultImg() {
+      const bgPath = `${import.meta.env.BASE_URL}background.png`;
+      await cacheImage(bgPath, 0);
+      localStorage.setItem("bgImage", 0);
+    }
+
     if (bgImageKey) loadBackground();
+    else saveDefaultImg();
   }, []);
 
   return (
