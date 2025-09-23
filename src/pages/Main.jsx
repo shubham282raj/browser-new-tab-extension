@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
-import Search from "../components/Search";
+import { lazy, Suspense, useEffect, useState } from "react";
 import Settings, { SettingsPane } from "../components/Settings";
 import { cacheImage, getCachedImage } from "../utils/indexedDB";
 import { getBoolLS } from "../utils/utils";
 import { getAllBookmarks } from "../utils/bookmark";
-import RainCanvas from "../components/Rain";
-import RainV2Canvas from "../components/RainV2";
+import Search from "../components/Search";
+
+const RainCanvas = lazy(() => import("../components/Rain"));
+const RainV2Canvas = lazy(() => import("../components/RainV2"));
 
 export default function Main() {
   const [toggleSettings, setToggle] = useState(false);
@@ -31,7 +32,15 @@ export default function Main() {
         style={{ backgroundImage: bgUrl ? `url(${bgUrl})` : "none" }}
       ></div>
       {!getBoolLS("misc_disable_background_rain") &&
-        (getBoolLS("misc_rain_version_2") ? <RainV2Canvas /> : <RainCanvas />)}
+        (getBoolLS("misc_rain_version_2") ? (
+          <Suspense fallback={<></>}>
+            <RainV2Canvas />
+          </Suspense>
+        ) : (
+          <Suspense fallback={<></>}>
+            <RainCanvas />
+          </Suspense>
+        ))}
       <div className="overlayGradient"></div>
 
       {toggleSettings ? (

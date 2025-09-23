@@ -39,3 +39,17 @@
 *::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
+
+.fade-in {
+  opacity: 0; /* start fully transparent */
+  animation: fadeIn 0.7s forwards; /* 1s duration, apply final state after animation */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

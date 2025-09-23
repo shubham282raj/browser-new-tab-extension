@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import SuggestionBox from "./SuggestionBox";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import DateAndTime from "./DateAndTime";
 import { getBoolLS } from "../utils/utils";
-import Bookmarks from "./Bookmarks";
-import ToDo from "./ToDo";
+
+const SuggestionBox = lazy(() => import("./SuggestionBox"));
+const Bookmarks = lazy(() => import("./Bookmarks"));
+const ToDo = lazy(() => import("./ToDo"));
 
 export default function Search({ settingsIcon }) {
   const [text, setText] = useState("");
@@ -22,7 +23,9 @@ export default function Search({ settingsIcon }) {
 
   return (
     <>
-      {!getBoolLS("todo_disable_to_do_list") && <ToDo />}
+      <Suspense fallback={<></>}>
+        <ToDo />
+      </Suspense>
       <div className={`absolute top-1/2 left-1/2 -translate-1/2 select-none`}>
         <DateAndTime visible={!text.trim()} />
 
@@ -60,9 +63,15 @@ export default function Search({ settingsIcon }) {
             {settingsIcon}
           </div>
 
-          <SuggestionBox searchText={text.trim()} />
+          <Suspense fallback={<></>}>
+            <SuggestionBox searchText={text.trim()} />
+          </Suspense>
 
-          {!text.trim() && <Bookmarks />}
+          {!text.trim() && (
+            <Suspense fallback={<></>}>
+              <Bookmarks />
+            </Suspense>
+          )}
         </div>
       </div>
     </>

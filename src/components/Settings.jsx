@@ -257,7 +257,7 @@ function BackgroundImageSettings() {
 
   const deleteImage = async (imgkey) => {
     const bool = confirm("Are you sure you want to delete this image?");
-    if (!bool || Number(imgkey) == NaN) return;
+    if (!bool || isNaN(Number(imgkey))) return;
 
     if (localStorage.getItem("bgImage") == imgkey) {
       localStorage.removeItem("bgImage");

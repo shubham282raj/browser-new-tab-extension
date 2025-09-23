@@ -90,7 +90,7 @@ const RainCanvas = () => {
 const getRelativeRainNums = (lsKey) => {
   let s = localStorage.getItem(lsKey);
   s = Number(s);
-  return s == NaN || s == 0 ? 1 : s;
+  return isNaN(s) || s === 0 ? 1 : s;
 };
 
 export default RainCanvas;

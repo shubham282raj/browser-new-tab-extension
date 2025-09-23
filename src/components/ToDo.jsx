@@ -37,7 +37,7 @@ export default function ToDo() {
   return (
     <div
       ref={dragRef}
-      className={`absolute w-80 flex flex-col gap-2 p-2 rounded-lg group ${
+      className={`absolute w-80 flex flex-col gap-2 p-2 rounded-lg group fade-in ${
         getBoolLS("todo_translucent_backgroud") && "bg-white/10"
       }`}
       style={{
@@ -80,7 +80,7 @@ function ToDoHeader({ onDrag, onDragEnd }) {
     window.addEventListener("mouseup", handleMouseUp);
   };
 
-  return (
+  return getBoolLS("todo_disable_to_do_list") ? null : (
     <div
       className={`rounded-lg select-none flex group ${
         getBoolLS("todo_translucent_backgroud") && "bg-white/10"
