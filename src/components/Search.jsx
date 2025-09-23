@@ -3,6 +3,7 @@ import SuggestionBox from "./SuggestionBox";
 import DateAndTime from "./DateAndTime";
 import { getBoolLS } from "../utils/utils";
 import Bookmarks from "./Bookmarks";
+import ToDo from "./ToDo";
 
 export default function Search({ settingsIcon }) {
   const [text, setText] = useState("");
@@ -10,7 +11,7 @@ export default function Search({ settingsIcon }) {
 
   useEffect(() => {
     const keydownHandler = (e) => {
-      if (searchRef.current) {
+      if (searchRef.current && !isAnyInputFocused()) {
         searchRef.current.focus();
       }
     };
@@ -21,6 +22,7 @@ export default function Search({ settingsIcon }) {
 
   return (
     <>
+      <ToDo />
       <div className={`absolute top-1/2 left-1/2 -translate-1/2 select-none`}>
         <DateAndTime visible={!text.trim()} />
 
@@ -65,4 +67,11 @@ export default function Search({ settingsIcon }) {
       </div>
     </>
   );
+}
+
+function isAnyInputFocused() {
+  const el = document.activeElement;
+  if (!el) return false;
+  const tag = el.tagName.toLowerCase();
+  return tag === "input" || tag === "textarea" || el.isContentEditable;
 }

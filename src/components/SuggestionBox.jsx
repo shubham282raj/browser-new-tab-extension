@@ -78,11 +78,11 @@ export default function SuggestionBox({ searchText }) {
         );
       } else if (e.key === "Enter" && focusedIndex >= 0) {
         if (searchText) window.location.href = allSuggestions[focusedIndex].url;
-        else if (localStorage.getItem("defaultSearch")) {
-          window.location.href = getGoToUrl(
-            localStorage.getItem("defaultSearch")
-          );
-        }
+        // else if (localStorage.getItem("defaultSearch")) {
+        //   window.location.href = getGoToUrl(
+        //     localStorage.getItem("defaultSearch")
+        //   );
+        // }
       }
     }
 
